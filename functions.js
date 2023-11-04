@@ -13,7 +13,6 @@ function checkParamsForPost(body) {
       return false;
     }
   }
-
   for (const param in params) {
     if (!body.hasOwnProperty(params[param])) {
       return false;
