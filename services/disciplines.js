@@ -1,33 +1,60 @@
+const { db } = require("../app/firebase");
 const fs = require("fs");
 
-const disciplines = JSON.parse(fs.readFileSync("disciplines.json"));
-
-function fetchAllDisciplines() {
-  return disciplines.sort((a, b) => {
-    if (a.id > b.id) return 1;
-    else if (a.id < b.id) return -1;
-  });
-}
-
-function fetchDisciplinesById(id) {
-  return disciplines.filter((item) => item.id == id);
-}
-
-function fetchDisciplinesByName(name) {
-  const result = disciplines.filter(
-    (item) => item.name.toLowerCase() == name.toLowerCase()
-  );
-  if (result) {
-    return result;
+async function getOnlyNames() {
+  try {
+    const disciplinesRef = db.collection("Disciplines");
+    const snapshot = await disciplinesRef.get();
+    if (snapshot.empty) {
+      return "Não existem disciplinas cadastradas!";
+    } else {
+      const data = [];
+      snapshot.docs.forEach((doc) => {
+        const docData = doc.data();
+        data.push(docData.title);
+      });
+      return data;
+    }
+  } catch (error) {
+    return error;
   }
-  return "Nenhuma disciplona encontrada";
 }
 
-function createDiscipline(newDiscipline) {
-  fs.writeFileSync(
-    "disciplines.json",
-    JSON.stringify([...disciplines, newDiscipline])
-  );
+async function getDisciplinesData() {
+  try {
+    const disciplinesRef = db.collection("Disciplines");
+    const snapshot = await disciplinesRef.get();
+    if (snapshot.empty) {
+      return "Dados não existem";
+    } else {
+      const data = [];
+      snapshot.docs.forEach((item) => {
+        const itemData = item.data();
+        data.push({
+          title: itemData.title,
+          articles: itemData.articles,
+        });
+      });
+      return data;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function createDiscipline(newDiscipline) {
+  try {
+    const disciplinesRef = db.collection("Disciplines");
+    const { title, description } = newDiscipline;
+    const disciplineDoc = disciplinesRef.doc(title);
+    await disciplineDoc.set({
+      title: title,
+      description: description,
+    });
+    return "Dados criados com sucesso!";
+  } catch (error) {
+    return error;
+  }
 }
 
 function updateDiscipline(id, content) {
@@ -38,17 +65,19 @@ function updateDiscipline(id, content) {
   fs.writeFileSync("disciplines.json", JSON.stringify(original));
 }
 
-function removeDiscipline(id) {
-  let original = JSON.parse(fs.readFileSync("disciplines.json"));
-
-  const newList = original.filter((item) => item.id != id);
-  fs.writeFileSync("disciplines.json", JSON.stringify(newList));
+async function removeDiscipline(name) {
+  const disciplineDoc = db.collection("Disciplines").doc(name);
+  try {
+    await disciplineDoc.delete();
+    return "Disciplina deletada com sucesso";
+  } catch (error) {
+    return "Erro ao deletar disciplina";
+  }
 }
 
 module.exports = {
-  fetchAllDisciplines,
-  fetchDisciplinesById,
-  fetchDisciplinesByName,
+  getOnlyNames,
+  getDisciplinesData,
   createDiscipline,
   updateDiscipline,
   removeDiscipline,

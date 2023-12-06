@@ -1,8 +1,9 @@
 const express = require("express");
+require("dotenv").config();
 const routeDisciplines = require("./routes/disciplines");
-var cors = require("cors");
+let cors = require("cors");
 
-const port = 8080;
+const port = process.env.PORT;
 const app = express();
 
 app.use(cors());
@@ -11,7 +12,14 @@ app.use("/disciplines", routeDisciplines);
 
 app.get("/", (req, res) => {
   res.send(
-    "Bem vindo à API MogLab! Para acessar as disciplinas, visite '/disciplines'"
+    `
+    <div>
+      <p>
+        Bem vindo à API MogLab! Para acessar as disciplinas, visite
+        '/disciplines'
+      </p>
+      <p>Criado e desenvolvido por: Caio Mognatti</p>
+    </div>`
   );
 });
 

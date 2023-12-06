@@ -1,8 +1,8 @@
 [
-  { "id": 1, "name": "Citologia" },
-  { "id": 2, "name": "Bioqúimica" },
-  { "id": 3, "name": "Genética" },
-  { "id": 4, "name": "Patologia Geral" },
-  { "id": 5, "name": "Sistema Tegumentar" },
-  { "id": 6, "name": "Sistema Nervoso" }
+  { "id": 1, "name": "Citologia", "link": "citologia" },
+  { "id": 2, "name": "Bioquímica", "link": "bioquimica" },
+  { "id": 3, "name": "Genética", "link": "genetica" },
+  { "id": 4, "name": "Patologia Geral", "link": "patologia-geral" },
+  { "id": 5, "name": "Sistema Tegumentar", "link": "sistema-tegumentar" },
+  { "id": 6, "name": "Sistema Nervoso", "link": "sistema-nervoso" }
 ]

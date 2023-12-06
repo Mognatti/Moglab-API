@@ -2,12 +2,16 @@ function checkId(id) {
   return id && Number(id);
 }
 
-function badId(res) {
-  return res.status(422).send(`Id inválido`);
+function checkName(name) {
+  return name && String(name);
+}
+
+function badKey(res) {
+  return res.status(422).send(`Disciplina não encontrada!`);
 }
 
 function checkParamsForPost(body) {
-  const params = ["id", "name"];
+  const params = ["title", "description"];
   for (const key in body) {
     if (!params.includes(key)) {
       return false;
@@ -23,6 +27,7 @@ function checkParamsForPost(body) {
 
 module.exports = {
   checkId,
-  badId,
+  checkName,
+  badKey,
   checkParamsForPost,
 };
