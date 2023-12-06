@@ -32,9 +32,11 @@ async function getDisciplinesData() {
         const itemData = item.data();
         data.push({
           title: itemData.title,
+          description: itemData.description,
           articles: itemData.articles,
         });
       });
+      console.log(data);
       return data;
     }
   } catch (error) {
@@ -53,7 +55,7 @@ async function createDiscipline(newDiscipline) {
     });
     return "Dados criados com sucesso!";
   } catch (error) {
-    return error;
+    return false;
   }
 }
 

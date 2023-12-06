@@ -44,7 +44,7 @@ async function postNewDiscipline(req, res) {
       res.status(422).send("Objeto inválido");
     }
   } catch (error) {
-    return res.sattus(500).send("Erro interno do servidor");
+    return res.status(500).send(error.message);
   }
 }
 
