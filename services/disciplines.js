@@ -1,4 +1,5 @@
 const { db } = require("../app/firebase");
+const { FieldValue } = require("firebase-admin/firestore");
 const fs = require("fs");
 
 async function getOnlyNames() {
@@ -52,6 +53,7 @@ async function createDiscipline(newDiscipline) {
     await disciplineDoc.set({
       title: title,
       description: description,
+      articles: [],
     });
     return "Dados criados com sucesso!";
   } catch (error) {
@@ -67,6 +69,18 @@ function updateDiscipline(id, content) {
   fs.writeFileSync("disciplines.json", JSON.stringify(original));
 }
 
+async function postArticle(discipline, article) {
+  try {
+    const disciplineRef = db.collection("Disciplines").doc(discipline);
+    const arrayUnion = FieldValue.arrayUnion;
+    const updateData = { articles: arrayUnion(article) };
+    await disciplineRef.update(updateData);
+    return console.log("Post feito com sucesso");
+  } catch (error) {
+    return console.log(error);
+  }
+}
+
 async function removeDiscipline(name) {
   const disciplineDoc = db.collection("Disciplines").doc(name);
   try {
@@ -77,10 +91,24 @@ async function removeDiscipline(name) {
   }
 }
 
+async function removeArticle(discipline, article) {
+  const disciplineDoc = db.collection("Disciplines").doc(discipline);
+  const arrayRemove = FieldValue.arrayRemove;
+  try {
+    await disciplineDoc.update({ articles: arrayRemove(article) });
+    return "Artigo deletado com sucesso";
+  } catch (error) {
+    console.log(error);
+    return "Erro ao deletar artigo";
+  }
+}
+
 module.exports = {
   getOnlyNames,
   getDisciplinesData,
   createDiscipline,
   updateDiscipline,
   removeDiscipline,
+  postArticle,
+  removeArticle,
 };

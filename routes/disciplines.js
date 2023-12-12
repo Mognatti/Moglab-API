@@ -6,10 +6,11 @@ const {
   patchDiscipline,
   deleteDiscipline,
   getDisciplinesNames,
+  postNewArticle,
+  deleteArticle,
 } = require("../controller/disciplines");
 
 const router = Router();
-
 router.get("/", getDisciplnes);
 router.get("/names", getDisciplinesNames);
 router.get("/name", (req, res) => {
@@ -19,6 +20,7 @@ router.get("/name", (req, res) => {
 });
 
 router.post("/", postNewDiscipline);
+router.post("/:discipline", postNewArticle);
 
 router.patch("/id/:id", patchDiscipline);
 
@@ -29,5 +31,6 @@ router.put("/", (req, res) => {
 });
 
 router.delete("/", deleteDiscipline);
+router.delete("/:discipline", deleteArticle);
 
 module.exports = router;

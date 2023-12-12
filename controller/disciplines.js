@@ -4,6 +4,8 @@ const {
   updateDiscipline,
   removeDiscipline,
   getOnlyNames,
+  postArticle,
+  removeArticle,
 } = require("../services/disciplines");
 const {
   checkId,
@@ -63,6 +65,19 @@ function patchDiscipline(req, res) {
   }
 }
 
+async function postNewArticle(req, res) {
+  const discipline = req.params.discipline;
+  const article = req.body;
+  console.log(discipline);
+  console.log(article);
+  try {
+    await postArticle(discipline, article);
+    res.status(201).send("Artigo criado com sucesso");
+  } catch (error) {
+    res.status(500).send("Algo deu errado!");
+  }
+}
+
 async function deleteDiscipline(req, res) {
   try {
     const { name } = req.body;
@@ -78,10 +93,25 @@ async function deleteDiscipline(req, res) {
   }
 }
 
+async function deleteArticle(req, res) {
+  const discipline = req.params.discipline;
+  const article = req.body;
+  try {
+    await removeArticle(discipline, article);
+    console.log("Artigo removido com sucesso");
+    return res.status(200).send("Artigo removido com sucesso");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Error ao apagar artigo!");
+  }
+}
+
 module.exports = {
   getDisciplinesNames,
   getDisciplnes,
   postNewDiscipline,
+  postNewArticle,
   patchDiscipline,
   deleteDiscipline,
+  deleteArticle,
 };
