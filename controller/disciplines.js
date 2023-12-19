@@ -1,18 +1,24 @@
 const {
-  createDiscipline,
   getDisciplinesData,
-  updateDiscipline,
-  removeDiscipline,
   getOnlyNames,
+  getOnlyArticles,
+  updateDiscipline,
+  updateArticle,
+  createDiscipline,
   postArticle,
+  removeDiscipline,
   removeArticle,
 } = require("../services/disciplines");
-const {
-  checkId,
-  checkName,
-  badKey,
-  checkParamsForPost,
-} = require("../functions");
+const { checkName, badKey, checkParamsForPost } = require("../functions");
+
+async function getDisciplnes(req, res) {
+  try {
+    const disciplines = await getDisciplinesData();
+    return res.status(200).send(disciplines);
+  } catch (error) {
+    return res.status(error.status).send(error.message);
+  }
+}
 
 async function getDisciplinesNames(req, res) {
   try {
@@ -23,12 +29,16 @@ async function getDisciplinesNames(req, res) {
   }
 }
 
-async function getDisciplnes(req, res) {
+async function getDisciplineArticles(req, res) {
   try {
-    const disciplines = await getDisciplinesData();
-    return res.status(200).send(disciplines);
+    const discipline = req.params.discipline;
+    const disciplines = await getOnlyArticles(discipline);
+    if (disciplines.length === 0) {
+      return res.send("A disciplina não possui artigos cadastrados");
+    }
+    return res.send(disciplines);
   } catch (error) {
-    return res.status(error.status).send(error.message);
+    res.send(error);
   }
 }
 
@@ -50,21 +60,6 @@ async function postNewDiscipline(req, res) {
   }
 }
 
-function patchDiscipline(req, res) {
-  try {
-    const id = req.params.id;
-    const content = req.body;
-    if (checkId(id)) {
-      updateDiscipline(id, content);
-      res.status(201).send("Disciplina atualizada com sucesso");
-    } else {
-      badId(res);
-    }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-}
-
 async function postNewArticle(req, res) {
   const discipline = req.params.discipline;
   const article = req.body;
@@ -78,10 +73,32 @@ async function postNewArticle(req, res) {
   }
 }
 
+async function patchDiscipline(req, res) {
+  try {
+    const discipline = req.params.discpline;
+    const newContent = req.body;
+    await updateDiscipline(discipline, newContent);
+    res.status(201).send("Disciplina atualizada com sucesso");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
+
+async function patchArticle(req, res) {
+  try {
+    const discipline = req.params.discipline;
+    const article = req.body;
+    await updateArticle(discipline, article);
+    res.status(201).send("Artigo atualizado com sucesso!");
+  } catch (error) {
+    res.status(500).send(error.message);
+    throw new Error(error);
+  }
+}
+
 async function deleteDiscipline(req, res) {
   try {
     const { name } = req.body;
-    console.log(name);
     if (checkName(name)) {
       await removeDiscipline(name);
       res.status(200).send("Item deletado com sucesso");
@@ -109,9 +126,11 @@ async function deleteArticle(req, res) {
 module.exports = {
   getDisciplinesNames,
   getDisciplnes,
+  getDisciplineArticles,
   postNewDiscipline,
   postNewArticle,
   patchDiscipline,
+  patchArticle,
   deleteDiscipline,
   deleteArticle,
 };

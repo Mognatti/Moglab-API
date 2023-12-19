@@ -1,7 +1,3 @@
-function checkId(id) {
-  return id && Number(id);
-}
-
 function checkName(name) {
   return name && String(name);
 }
@@ -26,7 +22,6 @@ function checkParamsForPost(body) {
 }
 
 module.exports = {
-  checkId,
   checkName,
   badKey,
   checkParamsForPost,
