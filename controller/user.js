@@ -31,9 +31,9 @@ async function updateProfileImage(req, res) {
         const profileImage = files.profileImage;
         const downloadLink = `https://storage.cloud.google.com/${
           process.env.STORAGE_BUCKET
-        }/images/${id}.${profileImage[0].mimetype.slice(6)}`;
+        }/images/${id}/profileImage.${profileImage[0].mimetype.slice(6)}`;
         await bucket.upload(profileImage[0].filepath, {
-          destination: `images/${id}.${profileImage[0].mimetype.slice(6)}`, // adds the file type to the destination (ex: jpg, png...)
+          destination: `images/${id}/profileImage.${profileImage[0].mimetype.slice(6)}`, // adds the file type to the destination (ex: jpg, png...)
           resumable: true,
           contentType: "image/*",
         });
