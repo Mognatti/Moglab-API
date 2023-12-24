@@ -16,10 +16,11 @@ const firebaseConfig = {
     client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
     universe_domain: process.env.UNIVERSE_DOMAIN,
   }),
+  storageBucket: process.env.STORAGE_BUCKET,
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-const FirebaseStorage = getStorage(firebaseApp);
+const bucket = getStorage().bucket();
 
-module.exports = { firebaseApp, db, FirebaseStorage };
+module.exports = { firebaseApp, db, bucket };

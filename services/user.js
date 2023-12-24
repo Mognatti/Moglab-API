@@ -1,11 +1,15 @@
-const { FirebaseStorage } = require("../app/firebase");
-const { ref, uploadBytes } = require("firebase/storage");
+const { bucket } = require("../app/firebase");
 
 async function uploadPhoto(userId, data) {
   try {
-    const fileRef = ref(FirebaseStorage, `images/${userId}`);
-    await uploadBytes(fileRef, data);
+    const options = {
+      destination: userId,
+    };
+    await bucket.upload("app.js", options);
+    console.log(userId, data);
+    return "OK";
   } catch (error) {
+    console.log(error);
     return error;
   }
 }
