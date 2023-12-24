@@ -1,6 +1,7 @@
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage");
+const { getAuth } = require("firebase-admin/auth");
 
 const firebaseConfig = {
   credential: cert({
@@ -22,5 +23,6 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const bucket = getStorage().bucket();
+const auth = getAuth();
 
-module.exports = { firebaseApp, db, bucket };
+module.exports = { firebaseApp, db, bucket, auth };
