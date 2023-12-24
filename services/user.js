@@ -5,7 +5,7 @@ async function uploadPhoto(userId, data) {
     const options = {
       destination: userId,
     };
-    await bucket.upload("app.js", options);
+    await bucket.upload(data, options);
     console.log(userId, data);
     return "OK";
   } catch (error) {
