@@ -26,18 +26,18 @@ async function getDisciplinesData() {
   }
 }
 
-async function getOnlyNames() {
+async function getNameAndId() {
   try {
     const disciplinesRef = db.collection("Disciplines");
-    const snapshot = await disciplinesRef.get();
+    const snapshot = await disciplinesRef.select("title", "id").get();
     if (snapshot.empty) {
       return "Não existem disciplinas cadastradas!";
     } else {
       const data = [];
       snapshot.docs.forEach((doc) => {
         const docData = doc.data();
-        if (docData.title) {
-          data.push(docData.title);
+        if (docData.title && docData.id) {
+          data.push({ title: docData.title, id: docData.id });
         }
       });
       return data;
@@ -146,8 +146,8 @@ async function postArticle(discipline, article) {
   }
 }
 
-async function removeDiscipline(name) {
-  const disciplineDoc = db.collection("Disciplines").doc(name);
+async function removeDiscipline(id) {
+  const disciplineDoc = db.collection("Disciplines").where("id" === id);
   try {
     await disciplineDoc.delete();
     return "Disciplina deletada com sucesso";
@@ -169,7 +169,7 @@ async function removeArticle(discipline, article) {
 }
 
 module.exports = {
-  getOnlyNames,
+  getNameAndId,
   getDisciplinesData,
   getOnlyArticles,
   createDiscipline,

@@ -1,6 +1,6 @@
 const {
   getDisciplinesData,
-  getOnlyNames,
+  getNameAndId,
   getOnlyArticles,
   updateDiscipline,
   updateArticle,
@@ -20,9 +20,9 @@ async function getDisciplnes(req, res) {
   }
 }
 
-async function getDisciplinesNames(req, res) {
+async function getDisciplinesNamesAndId(req, res) {
   try {
-    const disciplines = await getOnlyNames();
+    const disciplines = await getNameAndId();
     return res.status(200).send(disciplines);
   } catch (error) {
     return res.status(500).send("Algo deu errado!");
@@ -98,13 +98,9 @@ async function patchArticle(req, res) {
 
 async function deleteDiscipline(req, res) {
   try {
-    const { name } = req.body;
-    if (checkName(name)) {
-      await removeDiscipline(name);
-      res.status(200).send("Item deletado com sucesso");
-    } else {
-      return badKey(res);
-    }
+    const { id } = req.body;
+    await removeDiscipline(id);
+    res.status(200).send("Item deletado com sucesso");
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -124,7 +120,7 @@ async function deleteArticle(req, res) {
 }
 
 module.exports = {
-  getDisciplinesNames,
+  getDisciplinesNamesAndId,
   getDisciplnes,
   getDisciplineArticles,
   postNewDiscipline,

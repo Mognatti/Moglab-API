@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const {
   getDisciplnes,
-  getDisciplinesNames,
+  getDisciplinesNamesAndId,
   getDisciplineArticles,
   postNewDiscipline,
   postNewArticle,
@@ -14,8 +14,8 @@ const {
 
 const router = Router();
 router.get("/", getDisciplnes);
-router.get("/names", getDisciplinesNames);
-router.get("/name", getDisciplinesNames);
+router.get("/names", getDisciplinesNamesAndId);
+router.get("/name", getDisciplinesNamesAndId);
 router.get("/:discipline/articles", getDisciplineArticles);
 
 router.post("/", postNewDiscipline);
