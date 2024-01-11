@@ -24,7 +24,7 @@ router.post("/:discipline/articles", postNewArticle);
 router.patch("/:discipline", patchDiscipline);
 router.patch("/:discipline/articles", patchArticle);
 
-router.delete("/", deleteDiscipline);
+router.delete("/discipline/:id", deleteDiscipline);
 router.delete("/:discipline", deleteArticle);
 
 module.exports = router;

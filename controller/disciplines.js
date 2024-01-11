@@ -98,7 +98,7 @@ async function patchArticle(req, res) {
 
 async function deleteDiscipline(req, res) {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     await removeDiscipline(id);
     res.status(200).send("Item deletado com sucesso");
   } catch (error) {

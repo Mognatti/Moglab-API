@@ -147,7 +147,7 @@ async function postArticle(discipline, article) {
 }
 
 async function removeDiscipline(id) {
-  const disciplineDoc = db.collection("Disciplines").where("id" === id);
+  const disciplineDoc = db.collection("Disciplines").doc(id);
   try {
     await disciplineDoc.delete();
     return "Disciplina deletada com sucesso";
