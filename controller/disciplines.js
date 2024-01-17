@@ -46,12 +46,8 @@ async function postNewDiscipline(req, res) {
   try {
     const newDiscipline = req.body;
     if (checkParamsForPost(newDiscipline)) {
-      const success = await createDiscipline(newDiscipline);
-      if (success) {
-        return res.status(201).send(success);
-      } else {
-        return res.status(500).send("Algo deu errado...");
-      }
+      const { message, status } = await createDiscipline(newDiscipline);
+      return res.status(status).send(message);
     } else {
       res.status(422).send("Objeto inválido");
     }
@@ -110,13 +106,8 @@ async function deleteArticle(req, res) {
   const discipline = req.params.discipline;
   const article = req.params.id;
   try {
-    const { error, message, status } = await removeArticle(discipline, article);
-    if (!error) {
-      console.log("Artigo removido com sucesso");
-      return res.status(status).send(message);
-    } else {
-      return res.status(status).send(message);
-    }
+    const { message, status } = await removeArticle(discipline, article);
+    return res.status(status).send(message);
   } catch (error) {
     console.log(error);
     return res.status(500).send("Error ao deletar artigo!");

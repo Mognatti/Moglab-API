@@ -19,7 +19,15 @@ async function getDisciplinesData() {
           id: itemData.id,
         });
       });
-      return data;
+      return data.sort((a, b) => {
+        if (a.title > b.title) {
+          return 1;
+        } else if (a.title < b.title) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   } catch (error) {
     return error;
@@ -40,7 +48,15 @@ async function getNameAndId() {
           data.push({ title: docData.title, id: docData.id });
         }
       });
-      return data;
+      return data.sort((a, b) => {
+        if (a.title > b.title) {
+          return 1;
+        } else if (a.title < b.title) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     }
   } catch (error) {
     return error;
@@ -66,6 +82,12 @@ async function createDiscipline(newDiscipline) {
   try {
     const disciplinesRef = db.collection("Disciplines");
     const { title, description } = newDiscipline;
+    const query = disciplinesRef.where("title", "==", title);
+    const snapshot = await query.get();
+    console.log(snapshot);
+    if (!snapshot.empty) {
+      return { status: 409, message: "Uma disciplina com o mesmo nome já existe!", error: true };
+    }
     const id = uuidv4();
     const disciplineDoc = disciplinesRef.doc(id);
     await disciplineDoc.set({
@@ -74,9 +96,9 @@ async function createDiscipline(newDiscipline) {
       articles: [],
       id: id,
     });
-    return "Dados criados com sucesso!";
+    return { status: 201, message: "Disciplina criada com sucesso!", error: false };
   } catch (error) {
-    return false;
+    return { status: 500, message: "Erro ao criar disciplina!", error: true };
   }
 }
 
