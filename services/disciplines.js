@@ -157,14 +157,32 @@ async function removeDiscipline(id) {
 }
 
 async function removeArticle(discipline, article) {
-  const disciplineDoc = db.collection("Disciplines").doc(discipline);
-  const arrayRemove = FieldValue.arrayRemove;
+  const disciplineDoc = db.collection("Disciplines").where("title", "==", discipline);
   try {
-    await disciplineDoc.update({ articles: arrayRemove(article) });
-    return "Artigo deletado com sucesso";
+    const snapshot = await disciplineDoc.get();
+
+    if (snapshot.empty) {
+      return { status: 404, message: "Disciplina não encontrada", error: true };
+    }
+
+    if (snapshot.size > 1) {
+      return { status: 409, message: "Mais de uma disciplina encontrada!", error: true };
+    }
+    const doc = snapshot.docs[0];
+    const articlesArray = doc.data().articles;
+    const findArticle = articlesArray.find((item) => item.id === article);
+    console.log(findArticle);
+
+    if (!findArticle) {
+      return { status: 404, message: "Artigo não encontrado!", error: true };
+    }
+
+    const updatedArticlesArray = articlesArray.filter((item) => item.id !== article);
+    await doc.ref.update({ articles: updatedArticlesArray });
+    return { status: 200, message: "Artigo deletado com sucesso", error: false };
   } catch (error) {
-    console.log(error);
-    return "Erro ao deletar artigo";
+    console.error(error);
+    return { status: 500, message: "Erro ao deletar artigo", error: true };
   }
 }
 

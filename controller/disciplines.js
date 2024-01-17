@@ -108,14 +108,18 @@ async function deleteDiscipline(req, res) {
 
 async function deleteArticle(req, res) {
   const discipline = req.params.discipline;
-  const article = req.body;
+  const article = req.params.id;
   try {
-    await removeArticle(discipline, article);
-    console.log("Artigo removido com sucesso");
-    return res.status(200).send("Artigo removido com sucesso");
+    const { error, message, status } = await removeArticle(discipline, article);
+    if (!error) {
+      console.log("Artigo removido com sucesso");
+      return res.status(status).send(message);
+    } else {
+      return res.status(status).send(message);
+    }
   } catch (error) {
     console.log(error);
-    return res.status(500).send("Error ao apagar artigo!");
+    return res.status(500).send("Error ao deletar artigo!");
   }
 }
 
